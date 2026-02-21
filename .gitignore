@@ -1,3 +1,12 @@
+# Secret Keys
+.env
+credentials.json
+token.json
+
+# Python "Junk" (Files Python makes itself)
+__pycache__/
+*.pyc
+venv/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
