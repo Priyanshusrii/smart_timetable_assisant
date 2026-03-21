@@ -4,7 +4,8 @@ import os
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 import datetime
-
+from dateutil import parser 
+import pytz 
 
 #getting university data
 def uni_data():
@@ -33,7 +34,12 @@ def google_calend():
  
        
 #*title
-tv.title("abhi socha ni")
+tv.title("bhagwan bhrose ")
+#today date
+now_ist = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
+today_string = now_ist.strftime("%A, %d %b %Y")
+tv.subheader(f"📅 {today_string}")
+tv.write("---")
 
 col1,col2=tv.columns(2)
 with col1:
@@ -46,7 +52,9 @@ with col1:
 with col2:
 
     tv.header("events")
-
+    #adding manual button
+    if tv.button('sync google calendar'):
+     tv.rerun()
     events = google_calend()
     
     if not events:
@@ -54,4 +62,19 @@ with col2:
     else:  
         for e in events:
             name = e.get('summary', 'No Title')
-            tv.success(f"**{name}**")
+        
+            #Time showing
+            start=e.get('start',{})
+            full_time=start.get('dateTime')
+            #to change universal timezone to india timezone
+            if full_time:
+                temp_time=parser.parse(full_time)
+
+                indian_time=pytz.timezone("Asia/Kolkata")
+                ist_time=temp_time.astimezone(indian_time)
+            #am pm date year
+                clean=ist_time.strftime("%d %b %Y | %I:%M %p")
+            
+            else:
+                clean="All Day"
+            tv.success(f"**{name}** \n \nTime:{clean}")
