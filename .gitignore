@@ -1,3 +1,6 @@
+#files
+timetable.db
+authentication.py
 # Secret Keys
 api.env
 credentials.json
