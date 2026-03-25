@@ -6,7 +6,8 @@ from googleapiclient.discovery import build
 import datetime
 from dateutil import parser 
 import pytz 
-
+from dotenv import load_dotenv #to read env file
+from langchain_google_genai import ChatGoogleGenerativeAI  #gemini
 #getting university data
 def uni_data():
     conn=sqlite3.connect('timetable.db')
@@ -78,3 +79,21 @@ with col2:
             else:
                 clean="All Day"
             tv.success(f"**{name}** \n \nTime:{clean}")
+
+tv.write("-----------------")
+tv.header("😎 Assistant:")
+api_key=tv.secrets["GEMINI_API_KEY"]
+llm=ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    google_api_key=api_key
+)
+
+user_input=tv.chat_input("kYA BK RHE HO MC?")
+if user_input:
+       with tv.spinner("rukja"):
+            context="you are a chill intelligent freindly assistant for students. Use 'BSDK' and be concise."
+            response=llm.invoke(f"context:{context} \n \n user question:{user_input}")
+                
+            with tv.chat_message("assistant"):
+                 tv.write(response.content)
+
